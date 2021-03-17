@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.category (
 );
 
 CREATE TABLE IF NOT EXISTS public.video_trend_event (
-	trend_event_id numeric(18,0)
+	trend_event_id numeric(18,0),
 	video_id varchar(32),
 	channel_id varchar(32),
 	category_id numeric(18,0),
@@ -73,5 +73,5 @@ CREATE TABLE IF NOT EXISTS public."time" (
 	"month" varchar(256),
 	"year" int4,
 	weekday varchar(256),
-	CONSTRAINT time_pkey PRIMARY KEY (start_time)
+	CONSTRAINT time_pkey PRIMARY KEY (trending_date)
 );

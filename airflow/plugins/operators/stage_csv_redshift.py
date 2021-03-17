@@ -24,6 +24,7 @@ class StageCSVToRedshiftOperator(BaseOperator):
                  aws_credential_conn_id="aws_credential",
                  redshift_conn_id="redshift",
                  aws_region="us-east-1",
+                 manifest="",
                  *args, **kwargs):
         super(StageCSVToRedshiftOperator, self).__init__(*args, **kwargs)
         self.target_table = target_table
@@ -31,13 +32,21 @@ class StageCSVToRedshiftOperator(BaseOperator):
         self.aws_credential_conn_id = aws_credential_conn_id
         self.redshift_conn_id = redshift_conn_id
         self.aws_region = aws_region
-        self.copy_template = """COPY {}
-                                FROM '{}'
-                                ACCESS_KEY_ID '{}'
-                                SECRET_ACCESS_KEY '{}'
-                                REGION AS '{}'
-                                FORMAT CSV
-                             """
+        if manifest != "":
+            self.copy_template = """COPY {}
+                                    FROM '{}'
+                                    ACCESS_KEY_ID '{}'
+                                    SECRET_ACCESS_KEY '{}'
+                                    REGION AS '{}'
+                                 """ + " " + manifest
+        elif manifest == "manifest":
+            self.copy_template = """COPY {}
+                                    FROM '{}'
+                                    ACCESS_KEY_ID '{}'
+                                    SECRET_ACCESS_KEY '{}'
+                                    REGION AS '{}'
+                                    FORMAT CSV
+                                 """
 
     def execute(self, context):
         self.log.info('Credentials loading..')

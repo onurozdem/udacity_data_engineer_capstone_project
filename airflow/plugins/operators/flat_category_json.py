@@ -15,16 +15,16 @@ class FlatCategoryJSONOperator(BaseOperator):
     def __init__(self,
                  source_s3_bucket=None,
                  source_s3_key=None,
-                 s3_credential_conn_id="aws_credential",
+                 aws_credential_conn_id="aws_credential",
                  *args, **kwargs):
         super(FlatCategoryJSONOperator, self).__init__(*args, **kwargs)
         self.source_s3_bucket = source_s3_bucket
         self.source_s3_key = source_s3_key
-        self.s3_credential_conn_id = s3_credential_conn_id
+        self.aws_credential_conn_id = aws_credential_conn_id
 
     def execute(self, context):
         self.log.info('Credentials loading..')
-        aws_hook = AwsHook(self.s3_credential_conn_id)
+        aws_hook = AwsHook(self.aws_credential_conn_id)
         credentials = aws_hook.get_credentials()
 
         s3 = boto3.resource('s3',

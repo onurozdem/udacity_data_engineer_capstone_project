@@ -26,7 +26,7 @@ dag = DAG('etl_dag',
           max_active_runs=1
         )
 
-start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
+start_operator = DummyOperator(task_id='begin_execution',  dag=dag)
 
 create_table = PostgresOperator(
     task_id="create_table",
@@ -44,8 +44,9 @@ for continental in category_json_meta.keys():
                                                             dag=dag,
                                                             source_s3_bucket=country_meta["bucket"],
                                                             source_s3_key=country_meta["key"],
-                                                            s3_credential_conn_id="s3_credential"))
+                                                            aws_credential_conn_id="aws_credential"))
 
+collect_operator = DummyOperator(task_id='collect_list_tasks',  dag=dag)
 
 stage_category_tasks = []
 continental_category_manfiest = [("s3://onur-uda-america/america_category_manifest.json", "us-east-1"),
@@ -56,7 +57,7 @@ for manifest in continental_category_manfiest:
                                                             dag=dag,
                                                             target_table="staging_category",
                                                             source_s3_path=manifest[0],
-                                                            aws_credential_conn_id="s3_credentials",
+                                                            aws_credential_conn_id="aws_credentials",
                                                             redshift_conn_id="redshift",
                                                             aws_region=manifest[1],
                                                             json_option="auto ignorecase"
@@ -72,7 +73,7 @@ for manifest in continental_trend_manfiest:
                                                         dag=dag,
                                                         target_table="staging_video_trend_log",
                                                         source_s3_path=manifest[0],
-                                                        aws_credential_conn_id="s3_credentials",
+                                                        aws_credential_conn_id="aws_credentials",
                                                         redshift_conn_id="redshift",
                                                         aws_region=manifest[1],
                                                         json_option="auto ignorecase"
@@ -80,7 +81,8 @@ for manifest in continental_trend_manfiest:
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
-start_operator >> create_table >> flat_category_tasks
-flat_category_tasks >> [stage_category_tasks, stage_trend_tasks] >> end_operator
+start_operator >> create_table >> flat_category_tasks >> collect_operator
+collect_operator >> stage_category_tasks >> end_operator
+collect_operator >> stage_trend_tasks >> end_operator
 
 

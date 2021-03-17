@@ -6,6 +6,7 @@ from botocore.exceptions import ClientError
 
 def create_redshift_cluster(redshift, config):
     try:
+        #sg-00f5844e1382d74b7
         response = redshift.create_cluster(
             ClusterType=config["AWS_DWH"]["CLUSTER_TYPE"],
             NodeType=config["AWS_DWH"]["NODE_TYPE"],
@@ -14,7 +15,8 @@ def create_redshift_cluster(redshift, config):
             ClusterIdentifier=config["AWS_DWH"]["CLUSTER_IDENTIFIER"],
             MasterUsername=config["AWS_DWH"]["DB_USER"],
             MasterUserPassword=config["AWS_DWH"]["DB_PASSWORD"],
-            IamRoles=[config["IAM_ROLE"]["REDSHIFT_ARN"]]
+            IamRoles=[config["IAM_ROLE"]["REDSHIFT_ARN"]],
+            EnhancedVpcRouting=True
         )
     except ClientError as e:
         print(e)
