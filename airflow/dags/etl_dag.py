@@ -49,34 +49,37 @@ for continental in category_json_meta.keys():
 collect_operator = DummyOperator(task_id='collect_list_tasks',  dag=dag)
 
 stage_category_tasks = []
-continental_category_manfiest = [("s3://onur-uda-america/america_category_manifest.json", "us-east-1"),
-                                 ("s3://onur-uda-asia/asia_category_manifest.json", "ap-southeast-1"),
-                                 ("s3://onur-uda-europe/europe_category_manifest.json", "eu-central-1")]
+continental_category_manfiest = [("s3://onur-uda-america/america_category.manifest", "us-east-1"),
+                                 ("s3://onur-uda-asia/asia_category.manifest", "ap-southeast-1"),
+                                 ("s3://onur-uda-europe/europe_category.manifest", "eu-central-1")]
 for manifest in continental_category_manfiest:
     stage_category_tasks.append(StageJSONToRedshiftOperator(task_id='stage_' + manifest[1] + '_video_category',
                                                             dag=dag,
                                                             target_table="staging_category",
                                                             source_s3_path=manifest[0],
-                                                            aws_credential_conn_id="aws_credentials",
+                                                            aws_credential_conn_id="aws_credential",
                                                             redshift_conn_id="redshift",
                                                             aws_region=manifest[1],
-                                                            json_option="auto ignorecase"
+                                                            json_option="auto ignorecase",
+                                                            manifest="manifest"
                                                             ))
 
 
 stage_trend_tasks = []
-continental_trend_manfiest = [("s3://onur-uda-america/america_trend_manifest.json", "us-east-1"),
-                              ("s3://onur-uda-asia/asia_trend_manifest.json", "ap-southeast-1"),
-                              ("s3://onur-uda-europe/europe_trend_manifest.json", "eu-central-1")]
+continental_trend_manfiest = [("s3://onur-uda-america/america_trend.manifest", "us-east-1", "video_id,title,publishedat,channelid,channeltitle,categoryid,trending_date,tags,view_count,likes,dislikes,comment_count,thumbnail_link,comments_disabled,ratings_disabled,description"),
+                              ("s3://onur-uda-asia/asia_trend.manifest", "ap-southeast-1", "video_id,title,publishedat,channelid,channeltitle,categoryid,trending_date,tags,view_count,likes,dislikes,comment_count,thumbnail_link,comments_disabled,ratings_disabled,description"),
+                              ("s3://onur-uda-europe/europe_trend.manifest", "eu-central-1", "video_id,title,publishedat,channelid,channeltitle,categoryid,trending_date,tags,view_count,likes,dislikes,comment_count,thumbnail_link,comments_disabled,ratings_disabled,description")]
 for manifest in continental_trend_manfiest:
     stage_trend_tasks.append(StageCSVToRedshiftOperator(task_id='stage_' + manifest[1] + '_video_trends',
                                                         dag=dag,
                                                         target_table="staging_video_trend_log",
+                                                        columns=,
                                                         source_s3_path=manifest[0],
-                                                        aws_credential_conn_id="aws_credentials",
+                                                        aws_credential_conn_id="aws_credential",
                                                         redshift_conn_id="redshift",
                                                         aws_region=manifest[1],
-                                                        json_option="auto ignorecase"
+                                                        manifest="manifest",
+                                                        ignore_header="IGNOREHEADER 1"
                                                         ))
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)

@@ -35,21 +35,13 @@ class StageJSONToRedshiftOperator(BaseOperator):
         self.redshift_conn_id = redshift_conn_id
         self.aws_region = aws_region
         self.json_option = json_option
-        if manifest != "":
-            self.copy_template = """COPY {}
-                                    FROM '{}'
-                                    ACCESS_KEY_ID '{}'
-                                    SECRET_ACCESS_KEY '{}'
-                                    REGION AS '{}'
-                                 """ + " " + manifest
-        elif manifest == "manifest":
-            self.copy_template = """COPY {}
-                                    FROM '{}'
-                                    ACCESS_KEY_ID '{}'
-                                    SECRET_ACCESS_KEY '{}'
-                                    REGION AS '{}'
-                                    FORMAT as json '{}'
-                                 """
+        self.copy_template = """COPY {}
+                                FROM '{}'
+                                ACCESS_KEY_ID '{}'
+                                SECRET_ACCESS_KEY '{}'
+                                REGION AS '{}'
+                                FORMAT as json '{}'
+                             """ + " " + manifest
 
     def execute(self, context):
         self.log.info('Credentials loading..')

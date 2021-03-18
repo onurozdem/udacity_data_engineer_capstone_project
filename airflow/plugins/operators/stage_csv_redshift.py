@@ -20,33 +20,30 @@ class StageCSVToRedshiftOperator(BaseOperator):
     @apply_defaults
     def __init__(self,
                  target_table=None,
+                 columns=None,
                  source_s3_path=None,
                  aws_credential_conn_id="aws_credential",
                  redshift_conn_id="redshift",
                  aws_region="us-east-1",
                  manifest="",
+                 ignore_header="",
                  *args, **kwargs):
         super(StageCSVToRedshiftOperator, self).__init__(*args, **kwargs)
         self.target_table = target_table
+        self.columns = columns
         self.source_s3_path = source_s3_path
         self.aws_credential_conn_id = aws_credential_conn_id
         self.redshift_conn_id = redshift_conn_id
         self.aws_region = aws_region
-        if manifest != "":
-            self.copy_template = """COPY {}
-                                    FROM '{}'
-                                    ACCESS_KEY_ID '{}'
-                                    SECRET_ACCESS_KEY '{}'
-                                    REGION AS '{}'
-                                 """ + " " + manifest
-        elif manifest == "manifest":
-            self.copy_template = """COPY {}
-                                    FROM '{}'
-                                    ACCESS_KEY_ID '{}'
-                                    SECRET_ACCESS_KEY '{}'
-                                    REGION AS '{}'
-                                    FORMAT CSV
-                                 """
+        self.ignore_header= ignore_header
+        self.copy_template = """COPY {} ( {} )
+                                FROM '{}'
+                                ACCESS_KEY_ID '{}'
+                                SECRET_ACCESS_KEY '{}'
+                                REGION AS '{}'
+                                FORMAT CSV
+                                {}
+                             """ + " " + manifest
 
     def execute(self, context):
         self.log.info('Credentials loading..')
@@ -59,10 +56,12 @@ class StageCSVToRedshiftOperator(BaseOperator):
 
         self.log.info("Creating load script for {}..".format(self.target_table))
         copy_script = self.copy_template.format(self.target_table,
+                                                self.columns,
                                                 self.source_s3_path,
                                                 credentials.access_key,
                                                 credentials.secret_key,
-                                                self.aws_region)
+                                                self.aws_region,
+                                                self.ignore_header)
 
         self.log.info("Load data to stage table {}..".format(self.target_table))
         redshift_hook.run(copy_script)
