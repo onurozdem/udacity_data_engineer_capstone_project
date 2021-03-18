@@ -16,7 +16,7 @@ CREATE TABLE  IF NOT EXISTS public.channel (
 
 CREATE TABLE IF NOT EXISTS public.category (
 	id numeric(18,0) NOT NULL,
-	channelid varchar(256),
+	channel_id varchar(256),
 	kind varchar(255),
 	etag varchar(256),
 	title varchar(256),
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.category (
 );
 
 CREATE TABLE IF NOT EXISTS public.video_trend_event (
-	trend_event_id numeric(18,0),
+	trend_event_id INT IDENTITY(0,1),
 	video_id varchar(32),
 	channel_id varchar(32),
 	category_id numeric(18,0),
@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS public.video_trend_event (
 	dislikes numeric(18,0),
 	comment_count numeric(18,0),
 	comments_disabled boolean,
-    ratings_disabled boolean
+    ratings_disabled boolean,
+    CONSTRAINT video_trend_event_pkey PRIMARY KEY (trend_event_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.staging_category (
@@ -53,7 +54,7 @@ CREATE TABLE IF NOT EXISTS public.staging_video_trend_log (
 	channelId varchar(32),
 	channelTitle varchar(255),
 	categoryId numeric(18,0),
-	trending_date timestamp,
+	trending_date varchar(32),
 	tags varchar(255),
 	view_count numeric(18,0),
 	likes numeric(18,0),
