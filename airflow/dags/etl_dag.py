@@ -73,7 +73,7 @@ for manifest in continental_trend_manfiest:
     stage_trend_tasks.append(StageCSVToRedshiftOperator(task_id='stage_' + manifest[1] + '_video_trends',
                                                         dag=dag,
                                                         target_table="staging_video_trend_log",
-                                                        columns=,
+                                                        columns=manifest[2],
                                                         source_s3_path=manifest[0],
                                                         aws_credential_conn_id="aws_credential",
                                                         redshift_conn_id="redshift",

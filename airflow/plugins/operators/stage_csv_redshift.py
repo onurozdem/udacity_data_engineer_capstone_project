@@ -43,6 +43,7 @@ class StageCSVToRedshiftOperator(BaseOperator):
                                 REGION AS '{}'
                                 FORMAT CSV
                                 {}
+                                ACCEPTINVCHARS 'e'
                              """ + " " + manifest
 
     def execute(self, context):

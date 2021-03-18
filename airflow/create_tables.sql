@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS public.video (
 	video_id varchar(32) NOT NULL,
-	title varchar(255),
+	title varchar(max),
 	publish_date timestamp,
 	thumbnail_link varchar(255),
-	description varchar(255),
-	tags varchar(255),
+	description varchar(max),
+	tags varchar(max),
 	CONSTRAINT video_pkey PRIMARY KEY (video_id)
 );
 
@@ -49,13 +49,13 @@ CREATE TABLE IF NOT EXISTS public.staging_category (
 
 CREATE TABLE IF NOT EXISTS public.staging_video_trend_log (
 	video_id varchar(32),
-	title varchar(255),
-	publishAt varchar(50),
+	title varchar(max),
+	publishedAt varchar(50),
 	channelId varchar(32),
-	channelTitle varchar(255),
+	channelTitle varchar(max),
 	categoryId numeric(18,0),
 	trending_date varchar(32),
-	tags varchar(255),
+	tags varchar(max),
 	view_count numeric(18,0),
 	likes numeric(18,0),
 	dislikes numeric(18,0),
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS public.staging_video_trend_log (
     thumbnail_link varchar(255),
     comments_disabled boolean,
     ratings_disabled boolean,
-    description varchar(255)
+    description varchar(max)
 );
 
 CREATE TABLE IF NOT EXISTS public."time" (
