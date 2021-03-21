@@ -100,21 +100,21 @@ def create_airflow(airflow, config):
 
 redshift = boto3.client(
         'redshift',
-        region_name="us-east-2",
+        region_name=CONFIG["AWS_DWH"]["REGION"],
         aws_access_key_id=CONFIG["AWS_ACCESS"]["KEY"],
         aws_secret_access_key=CONFIG["AWS_ACCESS"]["SECRET"]
     )
 
 airflow_s3 = boto3.client(
         's3',
-        region_name="us-east-1",
+        region_name=CONFIG["AWS_AIR"]["S3_REGION"],
         aws_access_key_id=CONFIG["AWS_ACCESS"]["KEY"],
         aws_secret_access_key=CONFIG["AWS_ACCESS"]["SECRET"]
     )
 
 airflow = boto3.client(
         'mwaa',
-        region_name="us-east-2",
+        region_name=CONFIG["AWS_AIR"]["REGION"],
         aws_access_key_id=CONFIG["AWS_ACCESS"]["KEY"],
         aws_secret_access_key=CONFIG["AWS_ACCESS"]["SECRET"]
     )
