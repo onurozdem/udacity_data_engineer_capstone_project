@@ -82,10 +82,57 @@ for manifest in continental_trend_manfiest:
                                                         ignore_header="IGNOREHEADER 1"
                                                         ))
 
+load_video_trend_event_table = LoadFactOperator(
+    task_id='Load_video_trend_event_fact_table',
+    dag=dag,
+    target_table="video_trend_event",
+    redshift_conn_id="redshift",
+    stage_table_select_query=SqlQueries.video_trend_event_table_insert
+)
+
+load_video_dimension_table = LoadDimensionOperator(
+    task_id='Load_video_dim_table',
+    dag=dag,
+    target_table="video",
+    redshift_conn_id="redshift",
+    insert_mode="fresh_insert",
+    stage_table_select_query=SqlQueries.video_table_insert
+)
+
+load_channel_dimension_table = LoadDimensionOperator(
+    task_id='Load_channel_dim_table',
+    dag=dag,
+    target_table="channel",
+    redshift_conn_id="redshift",
+    insert_mode="fresh_insert",
+    stage_table_select_query=SqlQueries.channel_table_insert
+)
+
+load_category_dimension_table = LoadDimensionOperator(
+    task_id='Load_category_dim_table',
+    dag=dag,
+    target_table="category",
+    redshift_conn_id="redshift",
+    insert_mode="fresh_insert",
+    stage_table_select_query=SqlQueries.category_table_insert
+)
+
+load_time_dimension_table = LoadDimensionOperator(
+    task_id='Load_time_dim_table',
+    dag=dag,
+    target_table='"time"',
+    redshift_conn_id="redshift",
+    insert_mode="fresh_insert",
+    stage_table_select_query=SqlQueries.time_table_insert
+)
+
+
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
 start_operator >> create_table >> flat_category_tasks >> collect_operator
-collect_operator >> stage_category_tasks >> end_operator
-collect_operator >> stage_trend_tasks >> end_operator
+collect_operator >> stage_category_tasks >> load_video_trend_event_table
+collect_operator >> stage_trend_tasks >> load_video_trend_event_table
+load_video_trend_event_table >> [load_video_dimension_table, load_channel_dimension_table,
+                                 load_category_dimension_table, load_time_dimension_table] >> end_operator
 
 

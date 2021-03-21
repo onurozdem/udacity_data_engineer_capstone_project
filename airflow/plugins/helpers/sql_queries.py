@@ -11,8 +11,8 @@ class SqlQueries:
         """)
 
     channel_table_insert = ("""
-            SELECT 	channelID as channel_id,
-                    channelTitle as title
+            SELECT 	channelid as channel_id,
+                    channeltitle as title
             FROM public.staging_video_trend_log
         """)
 
@@ -28,8 +28,8 @@ class SqlQueries:
 
     video_trend_event_table_insert = ("""
             SELECT 	video_id,
-	                channelID as channel_id,
-	                categoryId as category_id,
+	                channelid as channel_id,
+	                categoryid as category_id,
 	                view_count,
 	                likes,
 	                dislikes,
