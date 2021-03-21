@@ -4,7 +4,7 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators import (PostgresOperator, FlatCategoryJSONOperator, StageJSONToRedshiftOperator,
                                StageCSVToRedshiftOperator, LoadFactOperator, LoadDimensionOperator, DataQualityOperator)
-
+from helpers import SqlQueries
 
 default_args = {
     'owner': 'uda_onur',
