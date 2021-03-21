@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.video (
 
 CREATE TABLE  IF NOT EXISTS public.channel (
 	channel_id varchar(32) NOT NULL,
-	title timestamp NOT NULL,
+	title varchar(max) NOT NULL,
 	CONSTRAINT channel_pkey PRIMARY KEY (channel_id)
 );
 
@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS public.category (
 	channel_id varchar(256),
 	kind varchar(255),
 	etag varchar(256),
-	title varchar(256),
-	assignable varchar(256),
+	title varchar(max),
+	assignable boolean,
 	CONSTRAINT category_pkey PRIMARY KEY (id)
 );
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS public.staging_category (
 	channelid varchar(255),
 	kind varchar(255),
 	etag varchar(255),
-	title varchar(255),
+	title varchar(max),
 	assignable boolean
 );
 

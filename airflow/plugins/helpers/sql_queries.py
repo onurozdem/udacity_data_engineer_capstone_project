@@ -3,7 +3,7 @@ class SqlQueries:
     video_table_insert = ("""
             SELECT 	video_id,
 	                title,
-	                TO_TIMESTAMP(publishedat, "YYYY-MM-DDTHH:MI:SSZ") as publish_date,
+	                TO_TIMESTAMP(publishedat, 'YYYY-MM-DDTHH:MI:SSZ') as publish_date,
 	                thumbnail_link,
 	                description,
 	                tags
