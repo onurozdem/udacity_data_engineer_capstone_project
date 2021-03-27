@@ -79,7 +79,8 @@
             "Condition": {
                 "StringLike": {
                     "kms:ViaService": [
-                        "sqs.us-east-1.amazonaws.com"
+                        "sqs.us-east-1.amazonaws.com",
+                        "airflow-env.amazonaws.com"
                     ]
                 }
             }
