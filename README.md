@@ -1,5 +1,3 @@
-# udacity_data_engineer_capstone_project
-
 # Capstone Project: Youtube Trend Data Flow
 This repository was created as part of my training on Udacity. For detailed information, you can check the https://www.udacity.com/course/data-engineer-nanodegree--nd027 link.
 
@@ -17,7 +15,7 @@ This project idea was inspired by data of https://www.kaggle.com/rsrishav/youtub
 
 "***This dataset includes several months (and counting) of data on daily trending YouTube videos. Data is included for the IN, US, GB, DE, CA, FR, RU, BR, MX, KR, and JP regions (India, USA, Great Britain, Germany, Canada, France, Russia, Brazil, Mexico, South Korea, and, Japan respectively), with up to 200 listed trending videos per day.
 Each region’s data is in a separate file. Data includes the video title, channel title, publish time, tags, views, likes and dislikes, description, and comment count.
-The data also includes a category_id field, which varies between regions. To retrieve the categories for a specific video, find it in the associated JSON. One such file is included for each of the 11 regions in the dataset.***" [kaggle.com/rsrishav/youtube-trending-video-dataset, Content]
+The data also includes a category_id field, which varies between regions. To retrieve the categories for a specific video, find it in the associated JSON. One such file is included for each of the 11 regions in the dataset.***" [https://www.kaggle.com/rsrishav/youtube-trending-video-dataset, Content]
 
 The details of the data have been given above. Social Fetcher Data Team decided each country files data come together in related continent folder when data collecting. The reason of this distribution, data collect wanted on closest network location.
 
@@ -134,9 +132,19 @@ In this project, used Airflow for orchestration etl processes. Airflow DAG archi
     Awesome! You're now all configured to run Airflow with Redshift.
 
 ## Project Running
+You can running this project on your environment by following the steps below. If you have already Redshift and Airflow environments, you should jump step 2.
 
-
-## Bonus
-
- 
-
+- ***Step 1: Create Environments***
+    - You must install boto3 library for this step.
+        > pip install boto3
+    - Create necessary Policy, Role, VPC and S3 bucket for AWS MWAA Airflow environment. ***Note:*** **(If you have already exist these objects you can pass this process and fill requirement fields on configuration file for next process.)** 
+        > python create_pre_req.py
+    - Create Redshift and Airflow environment on AWS. ***Note:*** **(This process's default create both of them. If you have one of the two environments, you can change relevant variable(s) to False under AWS_ENV_CREATE from the configuration file. Anyway, if you have both you can pass this process.)**
+        > python create_envs.py
+- ***Step 2: Load Airflow Files***
+    - If you'll create Airflow environment on AWS, you can run this process. ***Note:*** **(If you have already exist your own server, you should copy manually. Otherwise, you can change config file settings for your own AWS environment.)**
+        > python load_airflow_files.py    
+- ***Step 3(Extra): Additional Concepts*** 
+    - ***You can find related documents under `bonus/` folder. There are only a few sample queries yet. PySpark and advance queries will be added in the future. Be tuned.***
+    - After you load data your DWH stage, you can create queries for dashboards or reports.
+    - You can process data and work on analytic jobs with Spark. For this, you can perform this job on your own servers or using AWS EMR.     

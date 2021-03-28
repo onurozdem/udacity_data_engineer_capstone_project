@@ -7,7 +7,15 @@ from airflow.utils.decorators import apply_defaults
 
 class FlatCategoryJSONOperator(BaseOperator):
     """
+    The hierarchy of Youtube category JSON files aren't suitable for adding to the table.
+    Therefore, this operator convert these files to flat hierarchy JSON file.
+    Then, it uploads flat verison to under related country folder.
+    This operator is a specific operator for Social Fetcher Data Team.
 
+    Parameters:
+    source_s3_bucket (string):
+    source_s3_key (string):
+    aws_credential_conn_id (string): conn id of defined AWS credential details on Airflow
     """
     ui_color = '#358140'
 

@@ -111,7 +111,10 @@ airflow_subgroup = boto3.client(
         aws_access_key_id=CONFIG["AWS_ACCESS"]["KEY"],
         aws_secret_access_key=CONFIG["AWS_ACCESS"]["SECRET"]
     )
+"""
+if CONFIG["AWS_ENV_CREATE"]["AIRFLOW"]:
+    create_airflow_subgroup(airflow_subgroup, CONFIG)
+    create_airflow(airflow, CONFIG)"""
 
-create_airflow_subgroup(airflow_subgroup, CONFIG)
-create_redshift_cluster(redshift, CONFIG)
-create_airflow(airflow, CONFIG)
+if CONFIG["AWS_ENV_CREATE"]["REDSHIFT"]:
+    create_redshift_cluster(redshift, CONFIG)

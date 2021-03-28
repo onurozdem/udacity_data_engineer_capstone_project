@@ -14,6 +14,7 @@ class StageJSONToRedshiftOperator(BaseOperator):
     redshift_conn_id (string): conn id of defined Redshift connection details on Airflow
     aws_region (string): AWS region of source data
     json_option (string): mapping for between source and target columns. you can assign 'auto' or JSON path file
+    manifest (string): If FROM given S3 manifest file this parameter must be 'manifest'. All same type files names can collected in one manifest file. It can load multi file in one request.
     """
     ui_color = '#358140'
 

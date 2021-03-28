@@ -10,10 +10,13 @@ class StageCSVToRedshiftOperator(BaseOperator):
 
     Parameters:
     target_table (string): target staging table name
+    columns (string): target table columns specific order.
     source_s3_path (string): link of data source s3 bucket
     aws_credential_conn_id (string): conn id of defined AWS credential details on Airflow
     redshift_conn_id (string): conn id of defined Redshift connection details on Airflow
     aws_region (string): AWS region of source data
+    manifest (string): If FROM given S3 manifest file this parameter must be 'manifest'. All same type files names can collected in one manifest file. It can load multi file in one request.
+    ignore_header (string): if this parameter specified as 'IGNOREHEADER 1', function except first line as header line of document
     """
     ui_color = '#358140'
 

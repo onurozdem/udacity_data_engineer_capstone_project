@@ -16,7 +16,7 @@ default_args = {
     'email_on_retry': False
 }
 
-template_search_path = 's3://uda-airflow-bucket'
+template_search_path = '/opt/airflow/'
 
 dag = DAG('etl_dag',
           default_args=default_args,
