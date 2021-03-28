@@ -1,7 +1,6 @@
 import boto3
 from create_environment.config_parser import CONFIG
 
-
 airflow_s3 = boto3.client(
         's3',
         region_name=CONFIG["AWS_AIR"]["S3_REGION"],

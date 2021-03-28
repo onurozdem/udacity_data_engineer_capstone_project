@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS public.video_trend_event (
 CREATE TABLE IF NOT EXISTS public.staging_category (
 	id numeric(18,0),
 	channelid varchar(255),
-	kind varchar(255),
-	etag varchar(255),
+	kind varchar(max),
+	etag varchar(max),
 	title varchar(max),
 	assignable boolean
 );

@@ -44,7 +44,7 @@ for continental in category_json_meta.keys():
                                                             dag=dag,
                                                             source_s3_bucket=country_meta["bucket"],
                                                             source_s3_key=country_meta["key"],
-                                                            aws_credential_conn_id="aws_credential"))
+                                                            aws_credential_conn_id="aws_credentials"))
 
 collect_operator = DummyOperator(task_id='collect_list_tasks',  dag=dag)
 
@@ -57,7 +57,7 @@ for manifest in continental_category_manfiest:
                                                             dag=dag,
                                                             target_table="staging_category",
                                                             source_s3_path=manifest[0],
-                                                            aws_credential_conn_id="aws_credential",
+                                                            aws_credential_conn_id="aws_credentials",
                                                             redshift_conn_id="redshift",
                                                             aws_region=manifest[1],
                                                             json_option="auto ignorecase",
@@ -75,7 +75,7 @@ for manifest in continental_trend_manfiest:
                                                         target_table="staging_video_trend_log",
                                                         columns=manifest[2],
                                                         source_s3_path=manifest[0],
-                                                        aws_credential_conn_id="aws_credential",
+                                                        aws_credential_conn_id="aws_credentials",
                                                         redshift_conn_id="redshift",
                                                         aws_region=manifest[1],
                                                         manifest="manifest",
@@ -126,13 +126,19 @@ load_time_dimension_table = LoadDimensionOperator(
     stage_table_select_query=SqlQueries.time_table_insert
 )
 
+run_quality_checks = DataQualityOperator(
+    task_id='Run_data_quality_checks',
+    dag=dag,
+    control_tables_and_fields={"users":"userid", "songs":"songid", "songplays":"playid"},
+    redshift_conn_id="redshift",
+)
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
+
 
 start_operator >> create_table >> flat_category_tasks >> collect_operator
 collect_operator >> stage_category_tasks >> load_video_trend_event_table
 collect_operator >> stage_trend_tasks >> load_video_trend_event_table
 load_video_trend_event_table >> [load_video_dimension_table, load_channel_dimension_table,
-                                 load_category_dimension_table, load_time_dimension_table] >> end_operator
-
+                                 load_category_dimension_table, load_time_dimension_table] >> run_quality_checks >> end_operator
 
