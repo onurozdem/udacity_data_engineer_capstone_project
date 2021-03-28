@@ -1,0 +1,19 @@
+{
+  "america": [
+    {"bucket":"onur-uda-america","key":"Brazil/BR_category_id.json", "country":"Brazil", "region":"us-east-1"},
+	{"bucket":"onur-uda-america","key":"Canada/CA_category_id.json", "country":"Canada", "region":"us-east-1"},
+	{"bucket":"onur-uda-america","key":"Mexico/MX_category_id.json", "country":"Mexico", "region":"us-east-1"},
+	{"bucket":"onur-uda-america","key":"USA/US_category_id.json", "country":"USA", "region":"us-east-1"}
+  ],
+  "asia": [
+    {"bucket":"onur-uda-asia","key":"India/IN_category_id.json", "country":"India", "region":"ap-southeast-1"},
+	{"bucket":"onur-uda-asia","key":"Japan/JP_category_id.json", "country":"Japan", "region":"ap-southeast-1"},
+	{"bucket":"onur-uda-asia","key":"Russia/RU_category_id.json", "country":"Russia", "region":"ap-southeast-1"},
+	{"bucket":"onur-uda-asia","key":"SouthKorea/KR_category_id.json", "country":"SouthKorea", "region":"ap-southeast-1"}
+  ],
+  "europe": [
+    {"bucket":"onur-uda-europe","key":"France/FR_category_id.json", "country":"France", "region":"eu-central-1"},
+    {"bucket":"onur-uda-europe","key":"Germany/DE_category_id.json", "country":"Germany", "region":"eu-central-1"},
+    {"bucket":"onur-uda-europe","key":"GreatBritain/GB_category_id.json", "country":"GreatBritain", "region":"eu-central-1"}
+  ]
+}
