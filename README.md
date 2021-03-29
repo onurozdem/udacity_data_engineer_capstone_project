@@ -139,7 +139,7 @@ You can running this project on your environment by following the steps below. I
         > ![p7](pics/iam_user1.png)
         > ![p8](pics/iam_user2.png)
         > ![p9](pics/iam_user3.png)
-        > ![p10](pics/iam_user4.png)
+        > ![p10](pics/iam_user4.PNG)
     - After user creation, you must update [AWS_ACCESS] KEY and SECRET variable on config.cfg file with new user access credentials.
 - ***Step 2: Create Environments***
     - You must install boto3 library for this step.
