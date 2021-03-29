@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS public.category (
 
 CREATE TABLE IF NOT EXISTS public.video_trend_event (
 	trend_event_id INT IDENTITY(0,1),
-	trending_date timestamp,
 	video_id varchar(32),
+	trending_date timestamp,
 	channel_id varchar(32),
 	category_id numeric(18,0),
 	view_count numeric(18,0),
