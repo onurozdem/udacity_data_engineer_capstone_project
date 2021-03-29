@@ -49,23 +49,62 @@ The project general folder structure includes:
     * `load_airflow_files.py` loads all Airflow folders to S3 Airflow's bucket.   
   * `bonus/` contains queries for getting data from Redshift and Spark jobs scripts. This folder is not yet complete. You can find basic query samples for now
   * `README.md` provides introduction about project
+
+## Project Technology Stack
+The following technologies were used in this project:
+- AWS S3
+- AWS Redshift
+- AWS MWAA Airflow Environment
+
+- Data comes from Youtube as small size log files. For this reason, best choice S3 buckets for don't depend a data structure. 
+- Redshift is used for storing data as a table in the data warehouse. It is used for both staging and relational structures.
+- The Airflow is used for automation and monitoring to data warehouse ETL pipelines.
   
 ## DWH Schema for Youtube Trending Data
+ > ![p11](pics/schema.PNG)
 
 ### Fact Table
 1. video_trend_event - records of video trending logs 
-   * trend_event_id, video_id, channel_id, category_id, view_count, likes, dislikes, comment_count, comments_disabled, ratings_disabled
+   * **trend_event_id** unique number for each event row
+   * **video_id** identifier number of video
+   * **channel_id** identifier number of channel
+   * **category_id** identifier number of category
+   * **view_count** video views count per trend event
+   * **likes video** views count per trend event
+   * **dislikes** video dislikes count per trend event 
+   * **comment_count** video comments count per trend event 
+   * **comments_disabled** 'is video comments functionality disable' information 
+   * **ratings_disabled** 'is video rating functionality disable' information
 
 ### Dimension Tables
 1. video - videos on Youtube 
-   * video_id, title, publish_date, thumbnail_link, description, tags
+   * **video_id** identifier number of video
+   * **title** title of video
+   * **publish_date** first publish date of video 
+   * **thumbnail_link** video's thumbnail link
+   * **description** description of video
+   * **tags** tags of vide
+   
 2. channel - channels of videos
-   * channel_id, title
+   * **channel_id** identifier number of channel
+   * **title** title of channel
+   
 3. category - categories of videos
-   * id, channel_id, kind, etag, title, assignable
+   * **id** identifier number of category
+   * **channel_id** identifier number of category channel. this channel specified for category. 
+   * **kind** produced by Youtube kind tag for each category
+   * **etag** produced by Youtube etag tag for each category
+   * **title** title of category
+   * **assignable** 'is category assignable' information
+   
 4. time - timestamps of records in video_trend_event 
-   * trending_date, hour, day, week, month, year, weekday
-
+   * **trending_date** unique trend event date 
+   * **hour** hour of trend event date 
+   * **day** day of trend event date
+   * **week** week number of trend event date
+   * **month** month of trend event date
+   * **year** year of trend event date
+   * **weekday** weekday of trend event date
 ##Airflow 
 ETL works of this project will be executed and monitored on Airflow. Developed Airflow structures are described below.
 
@@ -162,3 +201,13 @@ You can running this project on your environment by following the steps below. I
     - ***You can find related documents under `bonus/` folder. There are only a few sample queries yet. PySpark and advance queries will be added in the future. Be tuned.***
     - After you load data your DWH stage, you can create queries for dashboards or reports.
     - You can process data and work on analytic jobs with Spark. For this, you can perform this job on your own servers or using AWS EMR.     
+ 
+## Answers to Some Approaches Questions
+- **When the data was increased by 100x, do you store the data in the same way? If your project is heavy on reading over writing, how do you store the data in a way to meet this requirement? What if the requirement is heavy on writing instead?**
+    - The current schema structure is very primitive. If the incoming data size increases, storage space is increased first. Secondly, pre-storage environment S3  can be replaced with a document-based database like Mongo DB. In a scenario where reading operations are intense, Redshift technology can be used again. In order to increase reading performance, the distrubution key  structure can be apply to tables by preserving the star schema structure. If the number of writes increases, the number of nodes can be increased to increase parallelism. In addition to these operations, server resources can be increased for avoid memory issues in each node.    
+
+- **How do you run this pipeline on a daily basis by 7 am every day. What if the dag fails, how do you update the dashboard? Will the dashboard still work? Or will you populate the dashboard by using last day?**
+    - In order to run at a certain time every day, "0 7 * * *" is given as an example of the schedule_interval parameter in DAG settings. Scheduling can be done with Crontab statements. If the DAGs get an error, it can be retried by editing the retries parameter in the DAG settings. If it fails in retries, it can be trigger manually to make it work.
+
+- **How do you make your database could be accessed by 100+ people? Can you come up with a more cost-effective approach? Does your project need to support 100+ connection at the same time?**
+    - A structure can be built microservice infrastructure to meet the demands of all users at the same time. Each microservice can fetch data from database cluster parallelly.
