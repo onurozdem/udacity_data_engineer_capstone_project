@@ -52,13 +52,9 @@ The project general folder structure includes:
 
 ## Project Technology Stack
 The following technologies were used in this project:
-- AWS S3
-- AWS Redshift
-- AWS MWAA Airflow Environment
-
-- Data comes from Youtube as small size log files. For this reason, best choice S3 buckets for don't depend a data structure. 
-- Redshift is used for storing data as a table in the data warehouse. It is used for both staging and relational structures.
-- The Airflow is used for automation and monitoring to data warehouse ETL pipelines.
+- ***AWS S3:*** Data comes from Youtube as small size log files. For this reason, best choice S3 buckets for don't depend a data structure. 
+- ***AWS Redshift:*** Redshift is used for storing data as a table in the data warehouse. It is used for both staging and relational structures.
+- ***AWS MWAA Airflow Environment:*** The Airflow is used for automation and monitoring to data warehouse ETL pipelines.
   
 ## DWH Schema for Youtube Trending Data
  > ![p11](pics/schema.PNG)
@@ -106,7 +102,7 @@ The following technologies were used in this project:
    * ***year***, year of trend event date
    * ***weekday***, weekday of trend event date
 
-##Airflow 
+## Airflow 
 ETL works of this project will be executed and monitored on Airflow. Developed Airflow structures are described below.
 
 ### Operators
