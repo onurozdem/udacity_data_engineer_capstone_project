@@ -6,6 +6,13 @@ from create_environment.config_parser import CONFIG
 
 
 def create_airflow_policy(airflow_iam, config):
+    """
+    Create necessary Policy for AWS MWAA Airflow environment.
+    
+    Parameters:
+    airflow_iam (boto3 client): boto3 client for creation policy on AWS IAM
+    config (CONFIG): configuration file variable objects
+    """
     try:
         policy_arn = None
         f = open("airflow_policy.json")
@@ -26,6 +33,14 @@ def create_airflow_policy(airflow_iam, config):
 
 
 def create_airflow_role(airflow_iam, config, policy_arn):
+    """
+    Create necessary Role for AWS MWAA Airflow environment.
+    
+    Parameters:
+    airflow_iam (boto3 client): boto3 client for creation role on AWS IAM
+    config (CONFIG): configuration file variable objects
+    policy_arn (string): policy arn string for attach policy to role
+    """
     try:
         response = airflow_iam.create_role(RoleName=config["AWS_AIR_PRE"]["ROLE_NAME"],
                                            AssumeRolePolicyDocument=json.dumps({"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"Service": ["airflow-env.amazonaws.com", "ec2.amazonaws.com"]}, "Action": "sts:AssumeRole"}]}))
@@ -41,6 +56,13 @@ def create_airflow_role(airflow_iam, config, policy_arn):
 
 
 def create_airflow_vpc(airflow_vpc, config):
+    """
+    Create necessary VPC Stack for AWS MWAA Airflow environment.
+    
+    Parameters:
+    airflow_vpc (boto3 client): boto3 client for creation vpc stack on AWS 
+    config (CONFIG): configuration file variable objects
+    """
     try:
         response = airflow_vpc.create_stack(StackName=config["AWS_AIR_PRE"]["VPC_STACK_NAME"],
                                             TemplateURL=config["AWS_AIR_PRE"]["VPC_STACK_TEMPLATE"],
@@ -62,6 +84,13 @@ def create_airflow_vpc(airflow_vpc, config):
 
 
 def create_airflow_s3(airflow_s3, config):
+    """
+    Create necessary S3 Buckets for AWS MWAA Airflow environment.
+    
+    Parameters:
+    airflow_s3 (boto3 client): boto3 client for creation s3 buckets on AWS S3
+    config (CONFIG): configuration file variable objects
+    """
     try:
         response = airflow_s3.create_bucket(
             ACL='private',
