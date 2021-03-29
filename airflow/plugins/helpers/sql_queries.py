@@ -26,8 +26,9 @@ class SqlQueries:
             FROM public.staging_category
         """)
 
-    video_trend_event_table_insert = (""" (video_id, channel_id, category_id, view_count, likes, dislikes, comment_count, comments_disabled, ratings_disabled) 
+    video_trend_event_table_insert = (""" (video_id, trending_date, channel_id, category_id, view_count, likes, dislikes, comment_count, comments_disabled, ratings_disabled) 
             SELECT 	video_id,
+	                TO_TIMESTAMP(trending_date, 'YYYY-MM-DDTHH:MI:SSZ') as trending_date,
 	                channelid as channel_id,
 	                categoryid as category_id,
 	                view_count,
