@@ -132,19 +132,33 @@ In this project, used Airflow for orchestration etl processes. Airflow DAG archi
     Awesome! You're now all configured to run Airflow with Redshift.
 
 ## Project Running
-You can running this project on your environment by following the steps below. If you have already Redshift and Airflow environments, you should jump step 2.
+You can running this project on your environment by following the steps below. If you have already Redshift and Airflow environments, you should jump step 3.
 
-- ***Step 1: Create Environments***
+- ***Step 1: Create AWS User***
+    - You should create a user on AWS for programatic access. This user must have AmazonRedshiftFullAccess, AmazonS3FullAccess, AdministratorAccess permissions. You can create user as like below:
+        > ![p7](pics/iam_user1.png)
+        > ![p8](pics/iam_user2.png)
+        > ![p9](pics/iam_user3.png)
+        > ![p10](pics/iam_user4.png)
+    - After user creation, you must update [AWS_ACCESS] KEY and SECRET variable on config.cfg file with new user access credentials.
+- ***Step 2: Create Environments***
     - You must install boto3 library for this step.
         > pip install boto3
     - Create necessary Policy, Role, VPC and S3 bucket for AWS MWAA Airflow environment. ***Note:*** **(If you have already exist these objects you can pass this process and fill requirement fields on configuration file for next process.)** 
-        > python create_pre_req.py
+        > python create_environment/create_pre_req.py
+    - Aftre creation pre requirements, you must update config file. If you have already exist role, policy, sub group you can use your own objects.
+        - [IAM_ROLE] REDSHIFT_ARN, created role ARN
+        - [AWS_AIR] EXECUTION_ROLE_ARN, 
+        - [AWS_AIR] VPC_ID, created VPC ID
+        - [AWS_AIR] SUBNET_PUBLIC_IDS, created VPC's subnet public id's with comma delimiter
+        - [AWS_AIR] SUBNET_PRIVATE_IDS, created VPC's subnet private id's with comma delimiter
+        - [AWS_AIR] SECURITY_GROUP_ID, this parameter must set if you have already exist security group for Airflow.    
     - Create Redshift and Airflow environment on AWS. ***Note:*** **(This process's default create both of them. If you have one of the two environments, you can change relevant variable(s) to False under AWS_ENV_CREATE from the configuration file. Anyway, if you have both you can pass this process.)**
-        > python create_envs.py
-- ***Step 2: Load Airflow Files***
+        > python create_environment/create_envs.py
+- ***Step 3: Load Airflow Files***
     - If you'll create Airflow environment on AWS, you can run this process. ***Note:*** **(If you have already exist your own server, you should copy manually. Otherwise, you can change config file settings for your own AWS environment.)**
-        > python load_airflow_files.py    
-- ***Step 3(Extra): Additional Concepts*** 
+        > python create_environment/load_airflow_files.py    
+- ***Step 4(Extra): Additional Concepts*** 
     - ***You can find related documents under `bonus/` folder. There are only a few sample queries yet. PySpark and advance queries will be added in the future. Be tuned.***
     - After you load data your DWH stage, you can create queries for dashboards or reports.
     - You can process data and work on analytic jobs with Spark. For this, you can perform this job on your own servers or using AWS EMR.     
