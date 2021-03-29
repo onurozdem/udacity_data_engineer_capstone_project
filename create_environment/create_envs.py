@@ -6,6 +6,13 @@ from create_environment.config_parser import CONFIG
 
 
 def create_airflow_securitygroup(airflow_securitygroup, config):
+    """
+    Create necessary Security Group for AWS MWAA Airflow environment.
+    
+    Parameters:
+    airflow_securitygroup (boto3 client): boto3 client for creation security group on AWS
+    config (CONFIG): configuration file variable objects
+    """
     try:
         security_group_id = None
         response = airflow_securitygroup.create_security_group(Description='airflow usage',
@@ -23,6 +30,13 @@ def create_airflow_securitygroup(airflow_securitygroup, config):
     return security_group_id
 
 def create_redshift_cluster(redshift, config):
+    """
+    Create Redshift Cluster on AWS for staging, fact and dimensions tables.
+    
+    Parameters:
+    redshift (boto3 client): boto3 client for creation Redshift Cluster on AWS
+    config (CONFIG): configuration file variable objects
+    """
     try:
         response = redshift.create_cluster(
             ClusterType=config["AWS_DWH"]["CLUSTER_TYPE"],
@@ -48,6 +62,14 @@ def create_redshift_cluster(redshift, config):
 
 
 def create_airflow(airflow, config, security_group_id):
+    """
+    Create MWAA Airflow Environment on AWS for ETL job automation and monitoring
+    
+    Parameters:
+    airflow (boto3 client): boto3 client for creation Redshift Cluster on AWS
+    config (CONFIG): configuration file variable objects
+    security_group_id (string): security group id for MWAA Airflow Environment network
+    """
     try:
         response = airflow.create_environment(
             AirflowVersion=config["AWS_AIR"]["VERSION"],
