@@ -64,47 +64,48 @@ The following technologies were used in this project:
  > ![p11](pics/schema.PNG)
 
 ### Fact Table
-1. video_trend_event - records of video trending logs 
-   * **trend_event_id** unique number for each event row
-   * **video_id** identifier number of video
-   * **channel_id** identifier number of channel
-   * **category_id** identifier number of category
-   * **view_count** video views count per trend event
-   * **likes video** views count per trend event
-   * **dislikes** video dislikes count per trend event 
-   * **comment_count** video comments count per trend event 
-   * **comments_disabled** 'is video comments functionality disable' information 
-   * **ratings_disabled** 'is video rating functionality disable' information
+1. **video_trend_event** - records of video trending logs 
+   * ***trend_event_id***, unique number for each event row
+   * ***video_id***, identifier number of video
+   * ***channel_id***, identifier number of channel
+   * ***category_id***, identifier number of category
+   * ***view_count***, video views count per trend event
+   * ***likes video***, views count per trend event
+   * ***dislikes***, video dislikes count per trend event 
+   * ***comment_count***, video comments count per trend event 
+   * ***comments_disabled***, 'is video comments functionality disable' information 
+   * ***ratings_disabled***, 'is video rating functionality disable' information
 
 ### Dimension Tables
 1. video - videos on Youtube 
-   * **video_id** identifier number of video
-   * **title** title of video
-   * **publish_date** first publish date of video 
-   * **thumbnail_link** video's thumbnail link
-   * **description** description of video
-   * **tags** tags of vide
+   * ***video_id***, identifier number of video
+   * ***title***, title of video
+   * ***publish_date***, first publish date of video 
+   * ***thumbnail_link***, video's thumbnail link
+   * ***description***, description of video
+   * ***tags***, tags of vide
    
 2. channel - channels of videos
-   * **channel_id** identifier number of channel
-   * **title** title of channel
+   * ***channel_id***, identifier number of channel
+   * ***title***, title of channel
    
 3. category - categories of videos
-   * **id** identifier number of category
-   * **channel_id** identifier number of category channel. this channel specified for category. 
-   * **kind** produced by Youtube kind tag for each category
-   * **etag** produced by Youtube etag tag for each category
-   * **title** title of category
-   * **assignable** 'is category assignable' information
+   * ***id***, identifier number of category
+   * ***channel_id***, identifier number of category channel. this channel specified for category. 
+   * ***kind***, produced by Youtube kind tag for each category
+   * ***etag***, produced by Youtube etag tag for each category
+   * ***title***, title of category
+   * ***assignable***, 'is category assignable' information
    
 4. time - timestamps of records in video_trend_event 
-   * **trending_date** unique trend event date 
-   * **hour** hour of trend event date 
-   * **day** day of trend event date
-   * **week** week number of trend event date
-   * **month** month of trend event date
-   * **year** year of trend event date
-   * **weekday** weekday of trend event date
+   * ***trending_date***, unique trend event date 
+   * ***hour***, hour of trend event date 
+   * ***day***, day of trend event date
+   * ***week***, week number of trend event date
+   * ***month***, month of trend event date
+   * ***year***, year of trend event date
+   * ***weekday***, weekday of trend event date
+
 ##Airflow 
 ETL works of this project will be executed and monitored on Airflow. Developed Airflow structures are described below.
 
