@@ -41,7 +41,7 @@ class SqlQueries:
         """)
 
     time_table_insert = ("""
-        SELECT publish_date, extract(hour from publish_date), extract(day from publish_date), extract(week from publish_date), 
-               extract(month from publish_date), extract(year from publish_date), extract(dayofweek from publish_date)
-        FROM (SELECT TO_TIMESTAMP(publishedat, 'YYYY-MM-DDTHH:MI:SSZ') as publish_date FROM public.staging_video_trend_log)
+        SELECT trending_date, extract(hour from trending_date), extract(day from trending_date), extract(week from trending_date), 
+               extract(month from trending_date), extract(year from trending_date), extract(dayofweek from trending_date)
+        FROM (SELECT TO_TIMESTAMP(trending_date, 'YYYY-MM-DDTHH:MI:SSZ') as trending_date FROM public.staging_video_trend_log)
     """)
