@@ -5,17 +5,22 @@ from botocore.exceptions import ClientError
 from create_environment.config_parser import CONFIG
 
 
-def create_airflow_subgroup(airflow_subgroup, config):
+def create_airflow_securitygroup(airflow_securitygroup, config):
     try:
-        response = airflow_subgroup.create_security_group(Description='airflow usage',
+        security_group_id = None
+        response = airflow_securitygroup.create_security_group(Description='airflow usage',
                                                           GroupName=config["AWS_AIR"]["SECURITY_GROUP_NAME"],
                                                           VpcId=config["AWS_AIR"]["VPC_ID"])
         if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+            security_group_id = response["GroupId"]
             print("Created Airflow Subgroup")
         else:
             print("Failed create Airflow Subgroup.")
     except ClientError as e:
         print(e)
+        if e.response["Error"]["Code"] == 'InvalidGroup.Duplicate':
+            security_group_id = airflow_securitygroup.describe_security_groups(GroupNames=[config["AWS_AIR"]["SECURITY_GROUP_NAME"]])["SecurityGroups"][0]["GroupId"]
+    return security_group_id
 
 def create_redshift_cluster(redshift, config):
     try:
@@ -42,7 +47,7 @@ def create_redshift_cluster(redshift, config):
     print("Cluster {} created.".format(cluster_identifier))
 
 
-def create_airflow(airflow, config):
+def create_airflow(airflow, config, security_group_id):
     try:
         response = airflow.create_environment(
             AirflowVersion=config["AWS_AIR"]["VERSION"],
@@ -74,7 +79,7 @@ def create_airflow(airflow, config):
             Name=config["AWS_AIR"]["ENVIRONMENT_NAME"],
             ExecutionRoleArn=config["AWS_AIR"]["EXECUTION_ROLE_ARN"],
             NetworkConfiguration={
-                'SecurityGroupIds': [config["AWS_AIR"]["SECURITY_GROUP_ID"]],
+                'SecurityGroupIds': [security_group_id],
                 'SubnetIds': config["AWS_AIR"]["SUBNET_PRIVATE_IDS"].split(",")
             },
             SourceBucketArn=config["AWS_AIR"]["SOURCE_BUCKET_ARN"],
@@ -87,7 +92,7 @@ def create_airflow(airflow, config):
     is_created = False
     while not is_created:
         sleep(1)
-        status_response = airflow.describe_stacks(StackName=environment_name)["Environment"]
+        status_response = airflow.get_environment(Name=environment_name)["Environment"]
         is_created = status_response["Status"] == "AVAILABLE"
     print("Airflow environment {} created.".format(environment_name))
 
@@ -105,16 +110,19 @@ airflow = boto3.client(
         aws_secret_access_key=CONFIG["AWS_ACCESS"]["SECRET"]
     )
 
-airflow_subgroup = boto3.client(
+airflow_securitygroup = boto3.client(
         'ec2',
         region_name=CONFIG["AWS_AIR"]["REGION"],
         aws_access_key_id=CONFIG["AWS_ACCESS"]["KEY"],
         aws_secret_access_key=CONFIG["AWS_ACCESS"]["SECRET"]
     )
-"""
-if CONFIG["AWS_ENV_CREATE"]["AIRFLOW"]:
-    create_airflow_subgroup(airflow_subgroup, CONFIG)
-    create_airflow(airflow, CONFIG)"""
 
 if CONFIG["AWS_ENV_CREATE"]["REDSHIFT"]:
     create_redshift_cluster(redshift, CONFIG)
+
+if CONFIG["AWS_ENV_CREATE"]["AIRFLOW"]:
+    security_group_id = create_airflow_securitygroup(airflow_securitygroup, CONFIG)
+    if security_group_id is not None:
+        create_airflow(airflow, CONFIG, security_group_id)
+    else:
+        create_airflow(airflow, CONFIG, CONFIG["AWS_AIR"]["SECURITY_GROUP_ID"])
